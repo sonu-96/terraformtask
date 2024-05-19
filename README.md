@@ -1,6 +1,6 @@
 # terraformtask
 ## ADD cred.tf file for aws credentials
----
+```
 variable "access_key" {
   type = string
   default = ""
@@ -13,4 +13,4 @@ variable "secret_key" {
   description = "IAM user secret_id"
 }
 
----
+```
