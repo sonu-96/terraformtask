@@ -16,7 +16,7 @@ resource "aws_ecs_task_definition" "mytask_terra_definition" {
     essential = true
     portMappings = [
       {
-        containerPort = 80
+        containerPort = 8080
       }
     ]
   }])
