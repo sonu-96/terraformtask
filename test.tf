@@ -1,9 +1,3 @@
-provider "aws" {
-  access_key = var.access_key
-  secret_key = var.secret_key
-  region = "us-east-2"
-}
-
 resource "aws_ecs_cluster" "terracluster" {
   name = "terracluster"
 }
@@ -11,7 +5,7 @@ resource "aws_ecs_cluster" "terracluster" {
 resource "aws_ecs_task_definition" "mytask_terra_definition" {
   family = "mytask"
   requires_compatibilities = ["FARGATE"]
-  network_mode = "awsvpc"  # Required for Fargate
+  network_mode = "awsvpc"
   cpu = 256
   memory = 512
   container_definitions = jsonencode([{
@@ -33,8 +27,14 @@ resource "aws_ecs_service" "terra_service" {
   name = "terra_service"
   cluster = aws_ecs_cluster.terracluster.id
   task_definition = aws_ecs_task_definition.mytask_terra_definition.arn
-  desired_count = 1
+  desired_count = 2
   launch_type = "FARGATE"
+
+  network_configuration {
+    subnets         = [aws_security_group.lb-sg.id]
+    security_groups = [aws_subnet.lb_subnet1.id]
+    assign_public_ip = true
+  }
 }
 
 resource "aws_iam_role" "ecsTaskExecutionRole" {
